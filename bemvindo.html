@@ -2,32 +2,111 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Bem-vindo</title>
+    <title>Painel do Usuário</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
+    <header>
         <h2 id="titulo">Bem-vindo!</h2>
         <p id="mensagem">Login realizado com sucesso.</p>
+    </header>
+
+    <nav class="menu">
+        <ul>
+            <li class="submenu">
+                <button>Decks ▼</button>
+                <ul class="dropdown">
+                    <li data-arena="1">Arena 1</li>
+                    <li data-arena="2">Arena 2</li>
+                    <li data-arena="3">Arena 3</li>
+                    <li data-arena="4">Arena 4</li>
+                    <li data-arena="5">Arena 5</li>
+                    <li data-arena="6">Arena 6</li>
+                    <li data-arena="7">Arena 7</li>
+                    <li data-arena="8">Arena 8</li>
+                    <li data-arena="9">Arena 9</li>
+                    <li data-arena="10">Arena 10</li>
+                    <li data-arena="11">Arena 11</li>
+                    <li data-arena="12">Arena 12</li>
+                </ul>
+            </li>
+            <li><button>Botão 2</button></li>
+            <li><button>Botão 3</button></li>
+            <li><button>Botão 4</button></li>
+            <li><button>Botão 5</button></li>
+            <li><button>Botão 6</button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="deckPanel" class="deck-panel">
+            <h3 id="deckTitle">Selecione uma arena</h3>
+            <ul id="deckList"></ul>
+        </div>
         <button id="logout">Sair</button>
-    </div>
+    </main>
 
     <script>
+        // Dados do usuário
         const displayName = sessionStorage.getItem('displayName') || 'Usuário';
         const username = sessionStorage.getItem('username') || '';
         document.getElementById('titulo').textContent = `Bem-vindo, ${displayName}!`;
         document.getElementById('mensagem').textContent = `Você está logado como: ${username}`;
 
+        if (!username) window.location.href = 'index.html';
+
+        // Logout
         document.getElementById('logout').addEventListener('click', () => {
             sessionStorage.clear();
             window.location.href = 'index.html';
         });
 
-        // Se quiser evitar acesso direto sem login:
-        if (!username) {
-            // redirecionar para login se não houver session
-            window.location.href = 'index.html';
-        }
+        // Toggle dropdown
+        const submenu = document.querySelector('.submenu button');
+        const dropdown = document.querySelector('.dropdown');
+
+        submenu.addEventListener('click', () => {
+            dropdown.classList.toggle('show');
+        });
+
+        window.addEventListener('click', function(e) {
+            if (!submenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Dados de decks por arena
+        const decks = {
+            1: ["Cavaleiro", "Mosqueteira", "Mini PEKka", "Arqueiras", "Servos", "Goblins", "Bola de Fogo", "Flechas"],
+            2: ["Gigante", "Baby Dragão", "Bombardeiro", "Valquíria", "Arqueiras", "Flechas", "Mini PEKka", "Zap"],
+            3: ["Valquíria", "Dragão Bebê", "Exército de Esqueletos", "Mosqueteira", "Mini PEKka", "Flechas", "Gigante", "Jaula de Goblins"],
+            4: ["PEKKA", "Baby Dragão", "Mosqueteira", "Tornado", "Aríete de Batalha", "Mini PEKka", "Flechas", "Servos"],
+            5: ["Corredor", "Bruxa", "Espírito de Fogo", "Servos", "Exército de Esqueletos", "Zap", "Barril de Goblins", "Bola de Fogo"],
+            6: ["Balão", "Gigante", "Lápide", "Bárbaros", "Flechas", "Zap", "Servos", "Mini PEKka"],
+            7: ["Megacavaleiro", "Príncipe", "Valquíria", "Morcegos", "Zap", "Bombardeiro", "Arqueiras", "Flechas"],
+            8: ["Balão", "Mosqueteira", "Zap", "Flechas", "Mini PEKka", "Bruxa", "Servos", "Bombardeiro"],
+            9: ["Corredor", "Princesa", "Tesla", "Zap", "Flechas", "Mini PEKka", "Dragões Esqueleto", "Servos"],
+            10:["Lava Hound", "Balão", "Bola de Fogo", "Mega Servo", "Zap", "Dragões Esqueleto", "Lápide", "Servos"],
+            11:["Tank", "Feitiço", "Tropas Rápidas", "Mini PEKka", "Servos", "Zap", "Bola de Fogo", "Arqueiras"],
+            12:["Lava Hound", "Lápide", "Megasservo", "Zap", "Bola de Fogo", "Dragões Esqueleto", "Guardas", "Balão"]
+        };
+
+        // Evento para mostrar deck ao clicar na arena
+        document.querySelectorAll('.dropdown li').forEach(item => {
+            item.addEventListener('click', () => {
+                const arena = item.dataset.arena;
+                const deck = decks[arena];
+                const title = `Deck da Arena ${arena}`;
+                document.getElementById('deckTitle').textContent = title;
+                const deckList = document.getElementById('deckList');
+                deckList.innerHTML = "";
+                deck.forEach(carta => {
+                    const li = document.createElement('li');
+                    li.textContent = carta;
+                    deckList.appendChild(li);
+                });
+            });
+        });
     </script>
 </body>
 </html>

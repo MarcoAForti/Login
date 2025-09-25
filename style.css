@@ -49,3 +49,21 @@ body {
     margin-top: 10px;
     font-size: 14px;
 }
+
+.deck-panel {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    max-width: 400px;
+}
+
+.deck-panel h3 {
+    margin-top: 0;
+}
+
+.deck-panel ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
