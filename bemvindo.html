@@ -7,8 +7,27 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Bem-vindo!</h2>
-        <p>Login realizado com sucesso.</p>
+        <h2 id="titulo">Bem-vindo!</h2>
+        <p id="mensagem">Login realizado com sucesso.</p>
+        <button id="logout">Sair</button>
     </div>
+
+    <script>
+        const displayName = sessionStorage.getItem('displayName') || 'Usuário';
+        const username = sessionStorage.getItem('username') || '';
+        document.getElementById('titulo').textContent = `Bem-vindo, ${displayName}!`;
+        document.getElementById('mensagem').textContent = `Você está logado como: ${username}`;
+
+        document.getElementById('logout').addEventListener('click', () => {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        // Se quiser evitar acesso direto sem login:
+        if (!username) {
+            // redirecionar para login se não houver session
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
