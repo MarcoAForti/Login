@@ -67,3 +67,37 @@ body {
     list-style-type: disc;
     padding-left: 20px;
 }
+
+.deck-panel {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    max-width: 600px;
+    overflow-y: auto;
+    height: 400px;
+}
+
+.deck-panel h3 {
+    margin-top: 0;
+}
+
+.deck-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.card {
+    text-align: center;
+    width: 80px;
+}
+
+.card-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}

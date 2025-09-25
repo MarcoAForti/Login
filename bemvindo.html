@@ -41,7 +41,7 @@
     <main>
         <div id="deckPanel" class="deck-panel">
             <h3 id="deckTitle">Selecione uma arena</h3>
-            <ul id="deckList"></ul>
+            <div id="deckList" class="deck-list"></div>
         </div>
         <button id="logout">Sair</button>
     </main>
@@ -75,21 +75,51 @@
             }
         });
 
-        // Dados de decks por arena
+        // Dados de decks por arena com imagens das cartas
         const decks = {
-            1: ["Cavaleiro", "Mosqueteira", "Mini PEKka", "Arqueiras", "Servos", "Goblins", "Bola de Fogo", "Flechas"],
-            2: ["Gigante", "Baby Dragão", "Bombardeiro", "Valquíria", "Arqueiras", "Flechas", "Mini PEKka", "Zap"],
-            3: ["Valquíria", "Dragão Bebê", "Exército de Esqueletos", "Mosqueteira", "Mini PEKka", "Flechas", "Gigante", "Jaula de Goblins"],
-            4: ["PEKKA", "Baby Dragão", "Mosqueteira", "Tornado", "Aríete de Batalha", "Mini PEKka", "Flechas", "Servos"],
-            5: ["Corredor", "Bruxa", "Espírito de Fogo", "Servos", "Exército de Esqueletos", "Zap", "Barril de Goblins", "Bola de Fogo"],
-            6: ["Balão", "Gigante", "Lápide", "Bárbaros", "Flechas", "Zap", "Servos", "Mini PEKka"],
-            7: ["Megacavaleiro", "Príncipe", "Valquíria", "Morcegos", "Zap", "Bombardeiro", "Arqueiras", "Flechas"],
-            8: ["Balão", "Mosqueteira", "Zap", "Flechas", "Mini PEKka", "Bruxa", "Servos", "Bombardeiro"],
-            9: ["Corredor", "Princesa", "Tesla", "Zap", "Flechas", "Mini PEKka", "Dragões Esqueleto", "Servos"],
-            10:["Lava Hound", "Balão", "Bola de Fogo", "Mega Servo", "Zap", "Dragões Esqueleto", "Lápide", "Servos"],
-            11:["Tank", "Feitiço", "Tropas Rápidas", "Mini PEKka", "Servos", "Zap", "Bola de Fogo", "Arqueiras"],
-            12:["Lava Hound", "Lápide", "Megasservo", "Zap", "Bola de Fogo", "Dragões Esqueleto", "Guardas", "Balão"]
+            1: [
+                "Cavaleiro", "Mosqueteira", "Mini PEKka", "Arqueiras", "Servos", "Goblins", "Bola de Fogo", "Flechas"
+            ],
+            2: [
+                "Gigante", "Baby Dragão", "Bombardeiro", "Valquíria", "Arqueiras", "Flechas", "Mini PEKka", "Zap"
+            ],
+            3: [
+                "Valquíria", "Dragão Bebê", "Exército de Esqueletos", "Mosqueteira", "Mini PEKka", "Flechas", "Gigante", "Jaula de Goblins"
+            ],
+            4: [
+                "PEKKA", "Baby Dragão", "Mosqueteira", "Tornado", "Aríete de Batalha", "Mini PEKka", "Flechas", "Servos"
+            ],
+            5: [
+                "Corredor", "Bruxa", "Espírito de Fogo", "Servos", "Exército de Esqueletos", "Zap", "Barril de Goblins", "Bola de Fogo"
+            ],
+            6: [
+                "Balão", "Gigante", "Lápide", "Bárbaros", "Flechas", "Zap", "Servos", "Mini PEKka"
+            ],
+            7: [
+                "Megacavaleiro", "Príncipe", "Valquíria", "Morcegos", "Zap", "Bombardeiro", "Arqueiras", "Flechas"
+            ],
+            8: [
+                "Balão", "Mosqueteira", "Zap", "Flechas", "Mini PEKka", "Bruxa", "Servos", "Bombardeiro"
+            ],
+            9: [
+                "Corredor", "Princesa", "Tesla", "Zap", "Flechas", "Mini PEKka", "Dragões Esqueleto", "Servos"
+            ],
+            10: [
+                "Lava Hound", "Balão", "Bola de Fogo", "Mega Servo", "Zap", "Dragões Esqueleto", "Lápide", "Servos"
+            ],
+            11: [
+                "Tank", "Feitiço", "Tropas Rápidas", "Mini PEKka", "Servos", "Zap", "Bola de Fogo", "Arqueiras"
+            ],
+            12: [
+                "Lava Hound", "Lápide", "Megasservo", "Zap", "Bola de Fogo", "Dragões Esqueleto", "Guardas", "Balão"
+            ]
         };
+
+        // Função para obter o link da imagem da carta
+        function getCardImage(cardName) {
+            const cardNameFormatted = cardName.toLowerCase().replace(/\s+/g, '-');
+            return `https://royaleapi.com/static/img/cards/${cardNameFormatted}.png`;
+        }
 
         // Evento para mostrar deck ao clicar na arena
         document.querySelectorAll('.dropdown li').forEach(item => {
@@ -101,9 +131,14 @@
                 const deckList = document.getElementById('deckList');
                 deckList.innerHTML = "";
                 deck.forEach(carta => {
-                    const li = document.createElement('li');
-                    li.textContent = carta;
-                    deckList.appendChild(li);
+                    const cardImage = getCardImage(carta);
+                    const div = document.createElement('div');
+                    div.classList.add('card');
+                    div.innerHTML = `
+                        <img src="${cardImage}" alt="${carta}" class="card-image">
+                        <p>${carta}</p>
+                    `;
+                    deckList.appendChild(div);
                 });
             });
         });
