@@ -1,98 +1,154 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* ---------- RESET BÁSICO ---------- */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-.login-container {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+body {
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+/* ---------- HEADER ---------- */
+header {
     text-align: center;
-    width: 300px;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-bottom: 2px solid #388E3C;
 }
 
-.login-container h2 {
-    margin-bottom: 20px;
+header h2 {
+    margin-bottom: 5px;
 }
 
-.login-container input {
-    display: block;
-    width: 90%;
-    margin: 10px auto;
+header p {
+    font-size: 0.9rem;
+}
+
+/* ---------- MENU ---------- */
+.menu ul {
+    list-style-type: none;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
-.login-container button {
-    width: 100%;
-    padding: 10px;
+.menu li {
+    position: relative;
+}
+
+.menu button {
+    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-.login-container button:hover {
+.menu button:hover {
     background-color: #45a049;
 }
 
-#erro {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
+/* ---------- DROPDOWN ---------- */
+.submenu .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 150px;
+    z-index: 100;
+    border-radius: 5px;
+    padding: 5px 0;
 }
 
+.submenu .dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.submenu .dropdown li:hover {
+    background-color: #f2f2f2;
+}
+
+.submenu .dropdown.show {
+    display: block;
+}
+
+/* ---------- MAIN / PAINEL ---------- */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+#logout {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #E53935;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+#logout:hover {
+    background-color: #D32F2F;
+}
+
+/* ---------- DECK PANEL ---------- */
 .deck-panel {
     margin: 20px 0;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 400px;
-}
-
-.deck-panel h3 {
-    margin-top: 0;
-}
-
-.deck-panel ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-.deck-panel {
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 600px;
+    background-color: #fff;
+    max-width: 700px;
+    width: 90%;
     overflow-y: auto;
     height: 400px;
 }
 
 .deck-panel h3 {
-    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
 }
 
+/* ---------- LISTA DE CARTAS ---------- */
 .deck-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
 }
 
 .card {
     text-align: center;
     width: 80px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
 }
 
 .card-image {
@@ -100,4 +156,10 @@ body {
     height: 60px;
     object-fit: contain;
     margin-bottom: 5px;
+}
+
+.card p {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #333;
 }
