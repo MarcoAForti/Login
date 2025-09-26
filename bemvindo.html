@@ -1,147 +1,208 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Painel do Usuário</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>Painel do Usuário - Decks</title>
+  <!-- versão ?v=2 para evitar cache antigo -->
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
-    <header>
-        <h2 id="titulo">Bem-vindo!</h2>
-        <p id="mensagem">Login realizado com sucesso.</p>
-    </header>
+  <header>
+    <h2 id="titulo">Bem-vindo!</h2>
+    <p id="mensagem">Login realizado com sucesso.</p>
+  </header>
 
-    <nav class="menu">
-        <ul>
-            <li class="submenu">
-                <button>Decks ▼</button>
-                <ul class="dropdown">
-                    <li data-arena="1">Arena 1</li>
-                    <li data-arena="2">Arena 2</li>
-                    <li data-arena="3">Arena 3</li>
-                    <li data-arena="4">Arena 4</li>
-                    <li data-arena="5">Arena 5</li>
-                    <li data-arena="6">Arena 6</li>
-                    <li data-arena="7">Arena 7</li>
-                    <li data-arena="8">Arena 8</li>
-                    <li data-arena="9">Arena 9</li>
-                    <li data-arena="10">Arena 10</li>
-                    <li data-arena="11">Arena 11</li>
-                    <li data-arena="12">Arena 12</li>
-                </ul>
-            </li>
-            <li><button>Botão 2</button></li>
-            <li><button>Botão 3</button></li>
-            <li><button>Botão 4</button></li>
-            <li><button>Botão 5</button></li>
-            <li><button>Botão 6</button></li>
+  <nav class="menu">
+    <ul>
+      <li class="submenu">
+        <button>Decks ▼</button>
+        <ul class="dropdown">
+          <li data-arena="1">Arena 1</li>
+          <li data-arena="2">Arena 2</li>
+          <li data-arena="3">Arena 3</li>
+          <li data-arena="4">Arena 4</li>
+          <li data-arena="5">Arena 5</li>
+          <li data-arena="6">Arena 6</li>
+          <li data-arena="7">Arena 7</li>
+          <li data-arena="8">Arena 8</li>
+          <li data-arena="9">Arena 9</li>
+          <li data-arena="10">Arena 10</li>
+          <li data-arena="11">Arena 11</li>
+          <li data-arena="12">Arena 12</li>
         </ul>
-    </nav>
+      </li>
+      <li><button>Botão 2</button></li>
+      <li><button>Botão 3</button></li>
+      <li><button>Botão 4</button></li>
+      <li><button>Botão 5</button></li>
+      <li><button>Botão 6</button></li>
+    </ul>
+  </nav>
 
-    <main>
-        <div id="deckPanel" class="deck-panel">
-            <h3 id="deckTitle">Selecione uma arena</h3>
-            <div id="deckList" class="deck-list"></div>
-        </div>
-        <button id="logout">Sair</button>
-    </main>
+  <main>
+    <div id="deckPanel" class="deck-panel">
+      <h3 id="deckTitle">Selecione uma arena</h3>
+      <div id="deckList" class="deck-list"></div>
+    </div>
 
-    <script>
-        // Dados do usuário
-        const displayName = sessionStorage.getItem('displayName') || 'Usuário';
-        const username = sessionStorage.getItem('username') || '';
-        document.getElementById('titulo').textContent = `Bem-vindo, ${displayName}!`;
-        document.getElementById('mensagem').textContent = `Você está logado como: ${username}`;
+    <button id="logout">Sair</button>
+  </main>
 
-        if (!username) window.location.href = 'index.html';
+  <script>
+    // mostra usuário (vindo do login)
+    const displayName = sessionStorage.getItem('displayName') || 'Usuário';
+    const username = sessionStorage.getItem('username') || '';
+    document.getElementById('titulo').textContent = `Bem-vindo, ${displayName}!`;
+    document.getElementById('mensagem').textContent = `Você está logado como: ${username}`;
 
-        // Logout
-        document.getElementById('logout').addEventListener('click', () => {
-            sessionStorage.clear();
-            window.location.href = 'index.html';
-        });
+    if (!username) {
+      // protege acesso direto
+      window.location.href = 'index.html';
+    }
 
-        // Toggle dropdown
-        const submenu = document.querySelector('.submenu button');
-        const dropdown = document.querySelector('.dropdown');
+    // logout
+    document.getElementById('logout').addEventListener('click', () => {
+      sessionStorage.clear();
+      window.location.href = 'index.html';
+    });
 
-        submenu.addEventListener('click', () => {
-            dropdown.classList.toggle('show');
-        });
+    // toggle dropdown
+    const submenuBtn = document.querySelector('.submenu button');
+    const dropdown = document.querySelector('.dropdown');
+    submenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('show');
+    });
+    window.addEventListener('click', () => dropdown.classList.remove('show'));
 
-        window.addEventListener('click', function(e) {
-            if (!submenu.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
+    // decks (nomes em Português)
+    const decks = {
+      1: ["Cavaleiro","Mosqueteira","Mini PEKka","Arqueiras","Servos","Goblins","Bola de Fogo","Flechas"],
+      2: ["Gigante","Baby Dragão","Bombardeiro","Valquíria","Arqueiras","Flechas","Mini PEKka","Zap"],
+      3: ["Valquíria","Dragão Bebê","Exército de Esqueletos","Mosqueteira","Mini PEKka","Flechas","Gigante","Jaula de Goblins"],
+      4: ["PEKKA","Baby Dragão","Mosqueteira","Tornado","Aríete de Batalha","Mini PEKka","Flechas","Servos"],
+      5: ["Corredor","Bruxa","Espírito de Fogo","Servos","Exército de Esqueletos","Zap","Barril de Goblins","Bola de Fogo"],
+      6: ["Balão","Gigante","Lápide","Bárbaros","Flechas","Zap","Servos","Mini PEKka"],
+      7: ["Megacavaleiro","Príncipe","Valquíria","Morcegos","Zap","Bombardeiro","Arqueiras","Flechas"],
+      8: ["Balão","Mosqueteira","Zap","Flechas","Mini PEKka","Bruxa","Servos","Bombardeiro"],
+      9: ["Corredor","Princesa","Tesla","Zap","Flechas","Mini PEKka","Dragões Esqueleto","Servos"],
+      10:["Lava Hound","Balão","Bola de Fogo","Mega Servo","Zap","Dragões Esqueleto","Lápide","Servos"],
+      11:["Tank","Feitiço","Tropas Rápidas","Mini PEKka","Servos","Zap","Bola de Fogo","Arqueiras"],
+      12:["Lava Hound","Lápide","Megasservo","Zap","Bola de Fogo","Dragões Esqueleto","Guardas","Balão"]
+    };
 
-        // Dados de decks por arena com imagens das cartas
-        const decks = {
-            1: [
-                "Cavaleiro", "Mosqueteira", "Mini PEKka", "Arqueiras", "Servos", "Goblins", "Bola de Fogo", "Flechas"
-            ],
-            2: [
-                "Gigante", "Baby Dragão", "Bombardeiro", "Valquíria", "Arqueiras", "Flechas", "Mini PEKka", "Zap"
-            ],
-            3: [
-                "Valquíria", "Dragão Bebê", "Exército de Esqueletos", "Mosqueteira", "Mini PEKka", "Flechas", "Gigante", "Jaula de Goblins"
-            ],
-            4: [
-                "PEKKA", "Baby Dragão", "Mosqueteira", "Tornado", "Aríete de Batalha", "Mini PEKka", "Flechas", "Servos"
-            ],
-            5: [
-                "Corredor", "Bruxa", "Espírito de Fogo", "Servos", "Exército de Esqueletos", "Zap", "Barril de Goblins", "Bola de Fogo"
-            ],
-            6: [
-                "Balão", "Gigante", "Lápide", "Bárbaros", "Flechas", "Zap", "Servos", "Mini PEKka"
-            ],
-            7: [
-                "Megacavaleiro", "Príncipe", "Valquíria", "Morcegos", "Zap", "Bombardeiro", "Arqueiras", "Flechas"
-            ],
-            8: [
-                "Balão", "Mosqueteira", "Zap", "Flechas", "Mini PEKka", "Bruxa", "Servos", "Bombardeiro"
-            ],
-            9: [
-                "Corredor", "Princesa", "Tesla", "Zap", "Flechas", "Mini PEKka", "Dragões Esqueleto", "Servos"
-            ],
-            10: [
-                "Lava Hound", "Balão", "Bola de Fogo", "Mega Servo", "Zap", "Dragões Esqueleto", "Lápide", "Servos"
-            ],
-            11: [
-                "Tank", "Feitiço", "Tropas Rápidas", "Mini PEKka", "Servos", "Zap", "Bola de Fogo", "Arqueiras"
-            ],
-            12: [
-                "Lava Hound", "Lápide", "Megasservo", "Zap", "Bola de Fogo", "Dragões Esqueleto", "Guardas", "Balão"
-            ]
+    // Mapeamento Português -> nome do ficheiro (sem .png)
+    const cardNameMap = {
+      "Cavaleiro":"knight",
+      "Mosqueteira":"musketeer",
+      "Mini PEKka":"mini-pekka",
+      "Arqueiras":"archers",
+      "Servos":"minions",
+      "Goblins":"goblins",
+      "Bola de Fogo":"fireball",
+      "Flechas":"arrows",
+      "Gigante":"giant",
+      "Baby Dragão":"baby-dragon",
+      "Bombardeiro":"bomber",
+      "Valquíria":"valkyrie",
+      "Zap":"zap",
+      "Exército de Esqueletos":"skeleton-army",
+      "Jaula de Goblins":"goblin-cage",
+      "PEKKA":"pekka",
+      "Tornado":"tornado",
+      "Aríete de Batalha":"battle-ram",
+      "Corredor":"hog-rider",
+      "Bruxa":"witch",
+      "Espírito de Fogo":"fire-spirit",
+      "Barril de Goblins":"goblin-barrel",
+      "Balão":"balloon",
+      "Lápide":"tombstone",
+      "Bárbaros":"barbarians",
+      "Megacavaleiro":"mega-knight",
+      "Príncipe":"prince",
+      "Morcegos":"bats",
+      "Princesa":"princess",
+      "Tesla":"tesla",
+      "Dragões Esqueleto":"skeleton-dragon", // tentativa: pode variar com o nome oficial
+      "Mega Servo":"mega-minion",
+      "Megasservo":"mega-minion",
+      "Guardas":"guards",
+      // placeholders genéricos
+      "Tank":"giant",
+      "Feitiço":"fireball",
+      "Tropas Rápidas":"spear-goblins"
+    };
+
+    // função utilitária: transforma string em possível filename (fallback)
+    function slugifyGuess(name) {
+      // remove acentos e caracteres estranhos, spaces -> hyphen
+      return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                 .toLowerCase()
+                 .replace(/\s+/g, '-')
+                 .replace(/[^a-z0-9\-]/g, '');
+    }
+
+    function getCardImageUrl(portugueseName) {
+      const mapped = cardNameMap[portugueseName];
+      const filename = mapped ? mapped : slugifyGuess(portugueseName);
+      return `https://royaleapi.github.io/cr-api-assets/cards-150/${filename}.png`;
+    }
+
+    // placeholder SVG (data URL) usado quando a imagem externa não carrega
+    const placeholderSVG = encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'>
+         <rect width='100%' height='100%' fill='%23cccccc'/>
+         <text x='50%' y='50%' font-size='18' dominant-baseline='middle' text-anchor='middle' fill='%23666666'>Imagem</text>
+         <text x='50%' y='70%' font-size='12' dominant-baseline='middle' text-anchor='middle' fill='%23666666'>não encontrada</text>
+       </svg>`
+    );
+    const placeholderDataUrl = `data:image/svg+xml;utf8,${placeholderSVG}`;
+
+    // renderiza deck no painel
+    function renderDeck(arena) {
+      const deck = decks[arena];
+      const panelTitle = document.getElementById('deckTitle');
+      const deckList = document.getElementById('deckList');
+      if (!deck) {
+        panelTitle.textContent = 'Deck não encontrado';
+        deckList.innerHTML = '';
+        return;
+      }
+      panelTitle.textContent = `Deck da Arena ${arena}`;
+      deckList.innerHTML = '';
+      deck.forEach(cardName => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+        const img = document.createElement('img');
+        img.className = 'card-image';
+        img.alt = cardName;
+        img.src = getCardImageUrl(cardName);
+
+        // se carregar falhar, troca para placeholder
+        img.onerror = function() {
+          this.onerror = null;
+          this.src = placeholderDataUrl;
         };
 
-        // Função para obter o link da imagem da carta
-        function getCardImage(cardName) {
-            const cardNameFormatted = cardName.toLowerCase().replace(/\s+/g, '-');
-            return `https://royaleapi.com/static/img/cards/${cardNameFormatted}.png`;
-        }
+        const p = document.createElement('p');
+        p.textContent = cardName;
+        cardDiv.appendChild(img);
+        cardDiv.appendChild(p);
+        deckList.appendChild(cardDiv);
+      });
+    }
 
-        // Evento para mostrar deck ao clicar na arena
-        document.querySelectorAll('.dropdown li').forEach(item => {
-            item.addEventListener('click', () => {
-                const arena = item.dataset.arena;
-                const deck = decks[arena];
-                const title = `Deck da Arena ${arena}`;
-                document.getElementById('deckTitle').textContent = title;
-                const deckList = document.getElementById('deckList');
-                deckList.innerHTML = "";
-                deck.forEach(carta => {
-                    const cardImage = getCardImage(carta);
-                    const div = document.createElement('div');
-                    div.classList.add('card');
-                    div.innerHTML = `
-                        <img src="${cardImage}" alt="${carta}" class="card-image">
-                        <p>${carta}</p>
-                    `;
-                    deckList.appendChild(div);
-                });
-            });
-        });
-    </script>
+    // vinculando eventos das arenas
+    document.querySelectorAll('.dropdown li').forEach(item => {
+      item.addEventListener('click', () => {
+        const arena = item.dataset.arena;
+        renderDeck(arena);
+        dropdown.classList.remove('show');
+      });
+    });
+
+    // opcional: renderizar Arena 1 por padrão
+    // renderDeck(1);
+  </script>
 </body>
 </html>

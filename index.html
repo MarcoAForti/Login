@@ -1,20 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Página de Login</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>Login - Clash Decks</title>
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="text" id="usuario" placeholder="Usuário" required>
-            <input type="password" id="senha" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
-        </form>
-        <p id="erro"></p>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="text" id="usuario" placeholder="Usuário" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+        <p id="erro" style="color:#ffcccb;margin-top:8px;"></p>
+      </form>
     </div>
-    <script src="login.js"></script>
+  </div>
+
+  <script>
+    // script de login simples (mesma lógica anterior ou fetch users.json)
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value.trim();
+      const senha = document.getElementById('senha').value;
+      const erro = document.getElementById('erro');
+
+      // Exemplo com 5 usuários (teste). Em produção, validar no backend.
+      const testUsers = [
+        {username:'admin', password:'admin123', displayName:'Administrador'},
+        {username:'joao.silva', password:'senhaJoao1', displayName:'João Silva'},
+        {username:'maria.oliveira', password:'maria2025', displayName:'Maria Oliveira'},
+        {username:'carlos.p', password:'carlos!99', displayName:'Carlos Pereira'},
+        {username:'visitante', password:'welcome5', displayName:'Visitante'}
+      ];
+
+      const user = testUsers.find(u => u.username === usuario);
+      if (!user || user.password !== senha) {
+        erro.textContent = 'Usuário ou senha incorretos!';
+        return;
+      }
+
+      // salva sessão e redireciona
+      sessionStorage.setItem('displayName', user.displayName);
+      sessionStorage.setItem('username', user.username);
+      window.location.href = 'bemvindo.html';
+    });
+  </script>
 </body>
 </html>
