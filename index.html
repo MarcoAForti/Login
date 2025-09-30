@@ -1,55 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gantt Pós Venda Irizar V11</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gantt Pós Venda Irizar V9</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <!-- Estado embutido para o “Salvar como HTML” -->
+  <script id="embedded_state" type="application/json">{}</script>
 
- 
-  <!-- App principal -->
-  <div id="app">
-    <header>
-      <img id="companyLogo" src="Logotipo_IRIZAR.png" alt="Logo">
-      <h1>Gantt Pós Venda Irizar V11</h1>
-      <button id="logout" onclick="logout()">Sair</button>
-    </header>
-
-    <!-- Botões de controle -->
-    <div class="toolbar">
-      <button onclick="setTheme('escuro')">Escuro</button>
-      <button onclick="setTheme('medio')">Médio</button>
-      <button onclick="setTheme('claro')">Claro</button>
-      <label for="logoUpload" class="upload-btn">Upload Logo</label>
-      <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="uploadLogo(event)">
-    </div>
-
-    <!-- Área do Gantt -->
-    <main>
-      <div id="gantt-container">
-        <table id="faseTable">
-          <thead>
-            <tr>
-              <th>Fase</th>
-              <th>Data Início</th>
-              <th>Dias</th>
-              <th>Data Final</th>
-              <th>Observações</th>
-            </tr>
-          </thead>
-          <tbody id="faseBody">
-          </tbody>
-        </table>
+  <div class="container">
+    <!-- Área principal -->
+    <div id="captureArea">
+      <div class="brand">
+        <img id="brandLogo" src="./assets/irizar-logo.png" alt="Irizar" />
+        <h1>Gantt Pós Venda Irizar V9</h1>
       </div>
-    </main>
+
+      <div class="grid">
+        <div class="card">
+          <details>
+            <summary>Feriados (opcional)</summary>
+            <div class="holidays-line">
+              <input id="holidayDate" type="date" />
+              <input id="holidayDesc" type="text" placeholder="Descrição (opcional)" />
+              <button id="addHoliday">Adicionar feriado</button>
+              <span class="small">Feriados serão excluídos no modo “Dias úteis”.</span>
+            </div>
+            <div id="holidayList" class="small" style="margin-top:8px;"></div>
+          </details>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table id="phasesTable">
+              <thead>
+                <tr>
+                  <th style="width:26px;"><input type="checkbox" id="checkAll" title="Selecionar todos" /></th>
+                  <th style="width:240px;">Fase</th>
+                  <th style="width:150px;">Data Início <span class="small">📅</span></th>
+                  <th style="width:130px;">Dias necessários</th>
+                  <th style="width:170px;">Data Final (calc.)</th>
+                  <th style="width:90px;">Cor</th>
+                  <th>Observações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <div class="small hint">
+            Regra: a Data Início conta como o 1º dia. Se cair em fim de semana/feriado no modo “Dias úteis”, começa no próximo dia útil.
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="stats">
+            <span class="pill" id="statCount">Fases: 0</span>
+            <span class="pill" id="statSpan">Período: -</span>
+            <span class="pill" id="statDur">Duração total (dias corridos): -</span>
+          </div>
+        </div>
+
+        <div class="card gantt-wrapper">
+          <div id="gantt" class="gantt" aria-label="Gráfico de Gantt">
+            <div class="grid-rows" id="ganttRowsLabels"></div>
+            <div class="grid-cols">
+              <div class="months" id="ganttMonths"></div>
+              <div class="dates" id="ganttDates"></div>
+              <div class="cols" id="ganttCols"></div>
+              <div id="ganttBars" style="position:absolute; top:50px; left:0; right:0; bottom:0;"></div>
+            </div>
+          </div>
+          <div class="footer-note">Para compartilhar, use “Salvar como HTML”.</div>
+        </div>
+      </div><!-- /grid -->
+    </div><!-- /captureArea -->
+
+    <!-- Toolbar -->
+    <div class="toolbar" style="margin-top:10px;">
+      <div class="left">
+        <input id="projectName" type="text" placeholder="Nome do projeto" />
+        <input id="owner" type="text" placeholder="Responsável" />
+        <div class="segmented" role="tablist" aria-label="Modo de contagem de dias">
+          <button id="modeWorking" class="active" title="Contar somente dias úteis (seg–sex)">Dias úteis</button>
+          <button id="modeCalendar" title="Contar todos os dias consecutivos">Dias corridos</button>
+        </div>
+      </div>
+      <div class="right">
+        <!-- Tema -->
+        <div class="segmented" role="tablist" aria-label="Tema">
+          <button id="themeDark" class="active">Escuro</button>
+          <button id="themeMedium">Médio</button>
+          <button id="themeLight">Claro</button>
+        </div>
+
+        <input id="logoFile" type="file" accept="image/*" style="display:none" />
+        <button id="logoBtn" title="Trocar/embutir logo">Logo…</button>
+
+        <button id="addRow" class="ok" title="Adicionar fase (Enter)">Adicionar fase</button>
+        <button id="dupRow" title="Duplicar fase selecionada">Duplicar</button>
+        <button id="delRow" class="danger" title="Remover fase(s) selecionada(s) (Del)">Remover</button>
+        <button id="exportCsv">Exportar CSV</button>
+        <button id="saveHtml" class="warn" title="Salvar como HTML (com dados)">Salvar como HTML</button>
+        <button id="printBtn">Imprimir / PDF</button>
+      </div>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="./app.js" defer></script>
 </body>
 </html>
