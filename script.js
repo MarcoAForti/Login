@@ -1,10 +1,10 @@
 // === Firebase Config ===
 // (Substitua pelos dados do seu projeto Firebase!)
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJECT.firebaseapp.com",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_PROJECT.appspot.com",
+  apiKey: "AIzaSyXXXXXXX",
+  authDomain: "gantt-irizar.firebaseapp.com",
+  projectId: "gantt-irizar",
+  storageBucket: "gantt-irizar.appspot.com",
   messagingSenderId: "123456789",
   appId: "1:123456789:web:abcdef123456"
 };
