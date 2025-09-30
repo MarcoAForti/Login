@@ -1,11 +1,11 @@
 // === CONFIG FIREBASE ===
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJECT.firebaseapp.com",
-  projectId: "SEU_PROJECT",
-  storageBucket: "SEU_PROJECT.appspot.com",
+ apiKey: "AIzaSyXXXXXXX",
+  authDomain: "gantt-irizar.firebaseapp.com",
+  projectId: "gantt-irizar",
+  storageBucket: "gantt-irizar.appspot.com",
   messagingSenderId: "123456789",
-  appId: "APP_ID"
+  appId: "1:123456789:web:abcdef123456"
 };
 firebase.initializeApp(firebaseConfig);
 
