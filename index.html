@@ -1,113 +1,361 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gantt Pós Venda Irizar V9</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gantt Pós Venda Irizar V10</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+
+    /* Tela de login */
+    #login-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 300px;
+      text-align: center;
+    }
+    .login-box h2 { margin-bottom: 20px; }
+    .login-box input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .login-box button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .login-box button:hover { background: #0056b3; }
+
+    /* Sistema */
+    #app { display: none; }
+
+    header {
+      display: flex;
+      align-items: center;
+      background: #007bff;
+      color: white;
+      padding: 10px;
+    }
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    #logout {
+      margin-left: auto;
+      background: #ff4d4d;
+      border: none;
+      padding: 8px 15px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #logout:hover { background: #cc0000; }
+
+    /* Botões tema */
+    .themes { margin: 10px 0; }
+    .themes button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Conteúdo principal */
+    main { padding: 20px; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    input, textarea {
+      width: 95%;
+      padding: 5px;
+    }
+
+    /* Linha do tempo */
+    .timeline-container {
+      overflow-x: auto;
+      border: 1px solid #ccc;
+      white-space: nowrap;
+      background: #fafafa;
+      position: relative;
+    }
+    .month-bar {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+    }
+    .month {
+      flex: 0 0 auto;
+      text-align: center;
+      border-right: 1px solid #ccc;
+      font-weight: bold;
+      background: #e6e6e6;
+      padding: 2px 0;
+    }
+    .days {
+      display: flex;
+    }
+    .day {
+      flex: 0 0 30px;
+      border-right: 1px solid #eee;
+      font-size: 10px;
+      text-align: center;
+      padding: 2px 0;
+    }
+    .gantt-row {
+      display: flex;
+      align-items: center;
+      height: 30px;
+      border-top: 1px solid #ccc;
+    }
+    .task {
+      position: absolute;
+      height: 24px;
+      background: #007bff;
+      border-radius: 4px;
+      color: white;
+      font-size: 12px;
+      text-align: center;
+      line-height: 24px;
+      padding: 0 5px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      th, td { font-size: 12px; }
+      header h1 { font-size: 16px; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Estado embutido para o “Salvar como HTML” -->
-  <script id="embedded_state" type="application/json">{}</script>
 
-  <div class="container">
-    <!-- Área principal -->
-    <div id="captureArea">
-      <div class="brand">
-        <img id="brandLogo" src="./assets/irizar-logo.png" alt="Irizar" />
-        <h1>Gantt Pós Venda Irizar V9</h1>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <details>
-            <summary>Feriados (opcional)</summary>
-            <div class="holidays-line">
-              <input id="holidayDate" type="date" />
-              <input id="holidayDesc" type="text" placeholder="Descrição (opcional)" />
-              <button id="addHoliday">Adicionar feriado</button>
-              <span class="small">Feriados serão excluídos no modo “Dias úteis”.</span>
-            </div>
-            <div id="holidayList" class="small" style="margin-top:8px;"></div>
-          </details>
-        </div>
-
-        <div class="card">
-          <div class="table-wrap">
-            <table id="phasesTable">
-              <thead>
-                <tr>
-                  <th style="width:26px;"><input type="checkbox" id="checkAll" title="Selecionar todos" /></th>
-                  <th style="width:240px;">Fase</th>
-                  <th style="width:150px;">Data Início <span class="small">📅</span></th>
-                  <th style="width:130px;">Dias necessários</th>
-                  <th style="width:170px;">Data Final (calc.)</th>
-                  <th style="width:90px;">Cor</th>
-                  <th>Observações</th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <div class="small hint">
-            Regra: a Data Início conta como o 1º dia. Se cair em fim de semana/feriado no modo “Dias úteis”, começa no próximo dia útil.
-          </div>
-        </div>
-
-        <div class="summary">
-          <div class="stats">
-            <span class="pill" id="statCount">Fases: 0</span>
-            <span class="pill" id="statSpan">Período: -</span>
-            <span class="pill" id="statDur">Duração total (dias corridos): -</span>
-          </div>
-        </div>
-
-        <div class="card gantt-wrapper">
-          <div id="gantt" class="gantt" aria-label="Gráfico de Gantt">
-            <div class="grid-rows" id="ganttRowsLabels"></div>
-            <div class="grid-cols">
-              <div class="months" id="ganttMonths"></div>
-              <div class="dates" id="ganttDates"></div>
-              <div class="cols" id="ganttCols"></div>
-              <div id="ganttBars" style="position:absolute; top:50px; left:0; right:0; bottom:0;"></div>
-            </div>
-          </div>
-          <div class="footer-note">Para compartilhar, use “Salvar como HTML”.</div>
-        </div>
-      </div><!-- /grid -->
-    </div><!-- /captureArea -->
-
-    <!-- Toolbar -->
-    <div class="toolbar" style="margin-top:10px;">
-      <div class="left">
-        <input id="projectName" type="text" placeholder="Nome do projeto" />
-        <input id="owner" type="text" placeholder="Responsável" />
-        <div class="segmented" role="tablist" aria-label="Modo de contagem de dias">
-          <button id="modeWorking" class="active" title="Contar somente dias úteis (seg–sex)">Dias úteis</button>
-          <button id="modeCalendar" title="Contar todos os dias consecutivos">Dias corridos</button>
-        </div>
-      </div>
-      <div class="right">
-        <!-- Tema -->
-        <div class="segmented" role="tablist" aria-label="Tema">
-          <button id="themeDark" class="active">Escuro</button>
-          <button id="themeMedium">Médio</button>
-          <button id="themeLight">Claro</button>
-        </div>
-
-        <input id="logoFile" type="file" accept="image/*" style="display:none" />
-        <button id="logoBtn" title="Trocar/embutir logo">Logo…</button>
-
-        <button id="addRow" class="ok" title="Adicionar fase (Enter)">Adicionar fase</button>
-        <button id="dupRow" title="Duplicar fase selecionada">Duplicar</button>
-        <button id="delRow" class="danger" title="Remover fase(s) selecionada(s) (Del)">Remover</button>
-        <button id="exportCsv">Exportar CSV</button>
-        <button id="saveHtml" class="warn" title="Salvar como HTML (com dados)">Salvar como HTML</button>
-        <button id="printBtn">Imprimir / PDF</button>
-      </div>
+  <!-- Login -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h2>Login</h2>
+      <input type="text" id="user" placeholder="Usuário">
+      <input type="password" id="pass" placeholder="Senha">
+      <button onclick="login()">Entrar</button>
     </div>
   </div>
 
-  <script src="./app.js" defer></script>
+  <!-- Sistema -->
+  <div id="app">
+    <header>
+      <img src="Logotipo_IRIZAR.png" alt="Logo">
+      <h1>Gantt Pós Venda Irizar V10</h1>
+      <button id="logout" onclick="logout()">Sair</button>
+    </header>
+
+    <main>
+      <div class="themes">
+        <button onclick="setTheme('dark')">Escuro</button>
+        <button onclick="setTheme('medium')">Médio</button>
+        <button onclick="setTheme('light')">Claro</button>
+      </div>
+
+      <table id="ganttTable">
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>Data Início</th>
+            <th>Dias</th>
+            <th>Data Final</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td><input type="text" placeholder="Nome da fase"></td>
+            <td><input type="date" onchange="updateDates(this)"></td>
+            <td><input type="number" value="1" min="1" onchange="updateDates(this)"></td>
+            <td><input type="date" readonly></td>
+            <td><textarea></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+      <button onclick="addRow()">Adicionar Fase</button>
+
+      <h3>Linha do Tempo</h3>
+      <div class="timeline-container" id="timeline"></div>
+    </main>
+  </div>
+
+  <script>
+    const USER = "admin";
+    const PASS = "1234";
+
+    // Login
+    function login() {
+      const u = document.getElementById("user").value;
+      const p = document.getElementById("pass").value;
+      if (u === USER && p === PASS) {
+        localStorage.setItem("loggedIn", "true");
+        showApp();
+      } else {
+        alert("Usuário ou senha incorretos!");
+      }
+    }
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      document.getElementById("app").style.display = "none";
+      document.getElementById("login-screen").style.display = "flex";
+    }
+    function showApp() {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("app").style.display = "block";
+    }
+    if (localStorage.getItem("loggedIn") === "true") { showApp(); }
+
+    // Gantt
+    function addRow() {
+      const tbody = document.getElementById("tableBody");
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><input type="text" placeholder="Nome da fase"></td>
+        <td><input type="date" onchange="updateDates(this)"></td>
+        <td><input type="number" value="1" min="1" onchange="updateDates(this)"></td>
+        <td><input type="date" readonly></td>
+        <td><textarea></textarea></td>`;
+      tbody.appendChild(row);
+    }
+
+    function updateDates(input) {
+      const row = input.closest("tr");
+      const startInput = row.querySelector("td:nth-child(2) input");
+      const daysInput = row.querySelector("td:nth-child(3) input");
+      const endInput = row.querySelector("td:nth-child(4) input");
+
+      if (startInput.value && daysInput.value) {
+        let startDate = new Date(startInput.value);
+        let endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + parseInt(daysInput.value) - 1);
+        endInput.value = endDate.toISOString().split("T")[0];
+      }
+      renderTimeline();
+    }
+
+    function renderTimeline() {
+      const timeline = document.getElementById("timeline");
+      timeline.innerHTML = "";
+
+      const rows = document.querySelectorAll("#tableBody tr");
+      let minDate = null, maxDate = null;
+      let tasks = [];
+
+      rows.forEach((row, idx) => {
+        const phase = row.querySelector("td:nth-child(1) input").value;
+        const start = row.querySelector("td:nth-child(2) input").value;
+        const end = row.querySelector("td:nth-child(4) input").value;
+        if (phase && start && end) {
+          const sDate = new Date(start);
+          const eDate = new Date(end);
+          tasks.push({ phase, start: sDate, end: eDate, row: idx });
+          if (!minDate || sDate < minDate) minDate = sDate;
+          if (!maxDate || eDate > maxDate) maxDate = eDate;
+        }
+      });
+
+      if (!minDate || !maxDate) return;
+
+      let totalDays = Math.ceil((maxDate - minDate) / (1000*60*60*24)) + 1;
+
+      // Barra de meses
+      const monthBar = document.createElement("div");
+      monthBar.className = "month-bar";
+      let current = new Date(minDate);
+      current.setDate(1);
+      while (current <= maxDate) {
+        let nextMonth = new Date(current);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        let monthDays = Math.ceil((Math.min(nextMonth, maxDate) - current) / (1000*60*60*24));
+        const monthDiv = document.createElement("div");
+        monthDiv.className = "month";
+        monthDiv.style.width = (monthDays*30) + "px";
+        monthDiv.innerText = current.toLocaleString("default",{month:"short",year:"numeric"});
+        monthBar.appendChild(monthDiv);
+        current = nextMonth;
+      }
+      timeline.appendChild(monthBar);
+
+      // Dias
+      const daysDiv = document.createElement("div");
+      daysDiv.className = "days";
+      for (let i=0; i<totalDays; i++) {
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "day";
+        const d = new Date(minDate);
+        d.setDate(d.getDate()+i);
+        dayDiv.innerText = d.getDate();
+        daysDiv.appendChild(dayDiv);
+      }
+      timeline.appendChild(daysDiv);
+
+      // Tarefas
+      tasks.forEach(t => {
+        const taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+        taskDiv.innerText = t.phase;
+        let offset = Math.floor((t.start - minDate) / (1000*60*60*24));
+        let length = Math.floor((t.end - t.start)/(1000*60*60*24))+1;
+        taskDiv.style.left = (offset*30) + "px";
+        taskDiv.style.top = (60 + t.row*35) + "px";
+        taskDiv.style.width = (length*30 - 4) + "px";
+        timeline.appendChild(taskDiv);
+      });
+
+      timeline.style.height = (tasks.length*35+100)+"px";
+      timeline.style.position = "relative";
+    }
+
+    // Temas
+    function setTheme(mode) {
+      if (mode === "dark") {
+        document.body.style.background = "#222";
+        document.body.style.color = "white";
+        document.querySelector("header").style.background = "#111";
+      } else if (mode === "medium") {
+        document.body.style.background = "#ccc";
+        document.body.style.color = "black";
+        document.querySelector("header").style.background = "#666";
+      } else {
+        document.body.style.background = "#fff";
+        document.body.style.color = "black";
+        document.querySelector("header").style.background = "#007bff";
+      }
+    }
+  </script>
 </body>
 </html>
