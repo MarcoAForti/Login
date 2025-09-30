@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gantt Pós Venda Irizar V11</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js"></script>
 </head>
 <body>
-  <!-- Login -->
+
+  <!-- Tela de login -->
   <div id="login-screen">
     <div class="login-box">
       <h2>Login</h2>
@@ -17,45 +22,43 @@
     </div>
   </div>
 
-  <!-- Sistema -->
+  <!-- App principal -->
   <div id="app">
     <header>
-      <img src="Logotipo_IRIZAR.png" alt="Logo">
+      <img id="companyLogo" src="Logotipo_IRIZAR.png" alt="Logo">
       <h1>Gantt Pós Venda Irizar V11</h1>
       <button id="logout" onclick="logout()">Sair</button>
     </header>
 
+    <!-- Botões de controle -->
+    <div class="toolbar">
+      <button onclick="setTheme('escuro')">Escuro</button>
+      <button onclick="setTheme('medio')">Médio</button>
+      <button onclick="setTheme('claro')">Claro</button>
+      <label for="logoUpload" class="upload-btn">Upload Logo</label>
+      <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="uploadLogo(event)">
+    </div>
+
+    <!-- Área do Gantt -->
     <main>
-      <div class="themes">
-        <button onclick="setTheme('dark')">Escuro</button>
-        <button onclick="setTheme('medium')">Médio</button>
-        <button onclick="setTheme('light')">Claro</button>
+      <div id="gantt-container">
+        <table id="faseTable">
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Data Início</th>
+              <th>Dias</th>
+              <th>Data Final</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody id="faseBody">
+          </tbody>
+        </table>
       </div>
-
-      <table id="ganttTable">
-        <thead>
-          <tr>
-            <th>Fase</th>
-            <th>Data Início</th>
-            <th>Dias</th>
-            <th>Data Final</th>
-            <th>Observações</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-      <button onclick="addRow()">Adicionar Fase</button>
-
-      <h3>Linha do Tempo</h3>
-      <div class="timeline-container" id="timeline"></div>
     </main>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-
-  <!-- Script principal -->
   <script src="script.js"></script>
 </body>
 </html>
